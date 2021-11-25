@@ -9,7 +9,7 @@
         },
         "containerName": {
             "type": "string",
-            "defaultValue": "[format('tsi-simulator-{0}', substring(newGuid(),0,5)]",
+            "defaultValue": "[format('tsi-simulator-{0}', substring(newGuid(),0,5))]",
             "description": "A globally unique name for your container"
         },
         "truckConnectionString": {
