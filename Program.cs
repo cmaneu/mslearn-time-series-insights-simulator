@@ -17,9 +17,9 @@ namespace device_simulation
 
         // The three connection string for the different IoT Devices being simulated (Truck, Airplane, Container)
 
-        private readonly static string connectionString_Truck = "{Your Truck device connection string here}";
-        private readonly static string connectionString_Airplane = "{Your Airplane device connection string here}";
-        private readonly static string connectionString_Container = "{Your Container device connection string here}";
+        private readonly static string connectionString_Truck = Environment.GetEnvironmentVariable("TRUCK_CS");
+        private readonly static string connectionString_Airplane =  Environment.GetEnvironmentVariable("AIRPLANE_CS");
+        private readonly static string connectionString_Container =  Environment.GetEnvironmentVariable("CONTAINER_CS");
 
 
         // The DeviceClient's for the three different IoT Devices being simulated
