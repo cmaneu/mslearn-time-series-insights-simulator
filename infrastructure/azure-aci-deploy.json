@@ -1,0 +1,86 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "location": {
+            "type": "string",
+            "defaultValue": "westeurope",
+            "description": "The region where you want to deploy your simulator"
+        },
+        "containerName": {
+            "type": "string",
+            "defaultValue": "[format('tsi-simulator-{0}', substring(newGuid(),0,5)]",
+            "description": "A globally unique name for your container"
+        },
+        "truckConnectionString": {
+            "type": "secureString"
+        },
+        "airplaneConnectionString": {
+            "type": "secureString"
+        },
+        "containerConnectionString": {
+            "type": "secureString"
+        }
+    },
+    "variables": {
+        "imageName": "ghcr.io/cmaneu/mslearn-time-series-insights-simulator:v1.0.0",
+        "imageType": "Public",
+        "osType": "Linux",
+        "numberCpuCores": "1",
+        "memory": "1.5",
+        "restartPolicy": "OnFailure",
+        "ipAddressType": "Public",
+        "ports": [
+            {
+                "port": "80",
+                "protocol": "TCP"
+            }
+        ]
+    },
+    "resources": [
+        {
+            "location": "[parameters('location')]",
+            "name": "[parameters('containerName')]",
+            "type": "Microsoft.ContainerInstance/containerGroups",
+            "apiVersion": "2021-07-01",
+            "properties": {
+                "containers": [
+                    {
+                        "name": "[parameters('containerName')]",
+                        "properties": {
+                            "image": "[variables('imageName')]",
+                            "resources": {
+                                "requests": {
+                                    "cpu": "[int(variables('numberCpuCores'))]",
+                                    "memoryInGB": "[float(variables('memory'))]"
+                                }
+                            },
+                            "environmentVariables": [
+                                {
+                                    "name": "TRUCK_CS",
+                                    "secureValue": "[parameters('truckConnectionString')]"
+                                },
+                                {
+                                    "name": "AIRPLANE_CS",
+                                    "secureValue": "[parameters('airplaneConnectionString')]"
+                                },
+                                {
+                                    "name": "CONTAINER_CS",
+                                    "secureValue": "[parameters('containerConnectionString')]"
+                                }
+                            ],
+                            "ports": "[variables('ports')]"
+                        }
+                    }
+                ],
+                "restartPolicy": "[variables('restartPolicy')]",
+                "osType": "[variables('osType')]",
+                "ipAddress": {
+                    "type": "[variables('ipAddressType')]",
+                    "ports": "[variables('ports')]"
+                }
+            },
+            "tags": {}
+        }
+    ]
+}
